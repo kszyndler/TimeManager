@@ -11,6 +11,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -50,6 +51,12 @@ public class NewTaskViewController {
 	@FXML
 	private Button addTaskButton;
 
+	@FXML
+	private Label errorMessage;
+
+	@FXML
+	private Button cancelButton;
+
 	private MainApp mainApp;
 	private Task newTask;
 
@@ -58,6 +65,29 @@ public class NewTaskViewController {
 	
 	@FXML
 	private void initialize() {
+	}
+
+	private String validate(){
+		if (name.getText() == null || name.getText().trim().isEmpty())
+		{
+			return "Name is empty";
+		}
+		else if (startDate.getValue() == null)
+		{
+			return "Start date was not chosen";
+		}
+		else if (finishDate.getValue() == null)
+		{
+			return "Finish date was not chosen";
+		}
+		else if(startDate.getValue().isAfter(finishDate.getValue()) ||
+				startDate.getValue().isEqual(finishDate.getValue()) && (newTask.getStartHour() > newTask.getFinishHour() ||
+						newTask.getStartHour() == newTask.getFinishHour() && newTask.getStartMinute() > newTask.getFinishMinute()) )
+		{
+			return "Finish date must not happen before start date";
+		}
+
+		return "";
 	}
 	
     public void setMainApp(MainApp mainApp) {
@@ -94,6 +124,28 @@ public class NewTaskViewController {
 
 		newTask.startDateProperty().bind(startDate.valueProperty());
 		newTask.finishDateProperty().bind(finishDate.valueProperty());
+
+		addTaskButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				errorMessage.setText(validate());
+
+				if (validate()==""){
+					newTask.setStatus(1);
+					mainApp.addTaskToTaskData(newTask);
+					mainApp.saveTaskDataToFile(new File("taskData.xml"));
+					mainApp.initRootLayout("New task successfully added");
+				}
+
+			}
+		});
+
+		cancelButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				mainApp.initRootLayout();
+			}
+		});
 
     }
 }

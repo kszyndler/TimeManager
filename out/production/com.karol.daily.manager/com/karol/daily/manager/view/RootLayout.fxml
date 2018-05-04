@@ -1,8 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1">
-	<!-- TODO Add Nodes -->
+<BorderPane prefHeight="400.0" prefWidth="400.0" stylesheets="@DarkTheme.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.karol.daily.manager.view.RootLayoutController">
+   <center>
+      <GridPane styleClass="background" stylesheets="@DarkTheme.css" BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="79.0" minHeight="10.0" prefHeight="79.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="148.0" minHeight="1.0" prefHeight="63.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="200.0" minHeight="10.0" prefHeight="116.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="272.0" minHeight="10.0" prefHeight="142.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label styleClass="label-header" stylesheets="@DarkTheme.css" text="Daily Manager" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <Button fx:id="tasksListMenuButton" alignment="CENTER" mnemonicParsing="false" prefHeight="85.0" prefWidth="318.0" styleClass="buttonMenu" stylesheets="@DarkTheme.css" text="Tasks for today" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <Button fx:id="newTaskMenuButton" alignment="CENTER" mnemonicParsing="false" prefHeight="85.0" prefWidth="318.0" styleClass="buttonMenu" stylesheets="@DarkTheme.css" text="Add new task" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+            <Label fx:id="information" prefHeight="5.0" styleClass="text-field" stylesheets="@DarkTheme.css" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+         </children>
+      </GridPane>
+   </center>
 </BorderPane>
-

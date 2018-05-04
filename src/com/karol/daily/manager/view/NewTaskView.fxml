@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
@@ -10,7 +12,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane id="finishTimeMinute" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.karol.daily.manager.view.NewTaskViewController">
+<GridPane id="finishTimeMinute" alignment="CENTER" stylesheets="@DarkTheme.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.karol.daily.manager.view.NewTaskViewController">
    <columnConstraints>
       <ColumnConstraints />
       <ColumnConstraints />
@@ -21,6 +23,7 @@
    </columnConstraints>
    <rowConstraints>
       <RowConstraints />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" />
       <RowConstraints />
       <RowConstraints />
       <RowConstraints />
@@ -29,32 +32,77 @@
       <RowConstraints />
       <RowConstraints minHeight="10.0" prefHeight="30.0" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" />
+      <RowConstraints minHeight="50.0" prefHeight="50.0" />
       <RowConstraints />
       <RowConstraints minHeight="10.0" prefHeight="30.0" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" />
+      <RowConstraints minHeight="50.0" prefHeight="50.0" />
       <RowConstraints />
       <RowConstraints />
       <RowConstraints />
    </rowConstraints>
    <children>
-      <Label text="Name" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-      <TextField id="name" fx:id="name" GridPane.columnIndex="5" GridPane.rowIndex="5" />
-      <Label text="Start date" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-      <Label text="Finish date" GridPane.columnIndex="2" GridPane.rowIndex="10" />
-      <Label text="Comment" GridPane.columnIndex="2" GridPane.rowIndex="14" />
-      <DatePicker id="startDate" fx:id="startDate" GridPane.columnIndex="5" GridPane.rowIndex="6" />
-      <DatePicker id="finishDate" fx:id="finishDate" prefHeight="26.0" prefWidth="189.0" GridPane.columnIndex="5" GridPane.rowIndex="10" />
-      <TextArea id="comment" fx:id="comment" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="14" />
-      <Label text="Create new task" GridPane.columnIndex="5" />
-      <Button fx:id="addTaskButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="87.0" text="Add" textAlignment="RIGHT" GridPane.columnIndex="5" GridPane.rowIndex="16" />
-      <Label GridPane.columnIndex="2" GridPane.rowIndex="7" />
-      <Slider id="startTimeHour" fx:id="startHourSlider" max="23.0" GridPane.columnIndex="5" GridPane.rowIndex="7" />
-      <Slider id="startTimeMinute" fx:id="startMinuteSlider" max="59.0" GridPane.columnIndex="5" GridPane.rowIndex="8" />
-      <Label id="startTimeView" fx:id="startTimeLabel" text="00:00" GridPane.columnIndex="5" GridPane.rowIndex="9" />
-      <Label id="finishTimeView" fx:id="finishTimeLabel" text="00:00" GridPane.columnIndex="5" GridPane.rowIndex="13" />
-      <Slider id="finishTimeMinute" fx:id="finishMinuteSlider" max="59.0" GridPane.columnIndex="5" GridPane.rowIndex="12" />
-      <Slider id="finishTimeHour" fx:id="finishHourSlider" max="23.0" GridPane.columnIndex="5" GridPane.rowIndex="11" />
+      <TextField id="name" fx:id="name" GridPane.columnIndex="5" GridPane.rowIndex="6" />
+      <Label text="Name" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin>
+         <padding>
+            <Insets right="10.0" />
+         </padding></Label>
+      <Label text="Start date" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="7">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin>
+         <padding>
+            <Insets right="10.0" />
+         </padding></Label>
+      <Label text="Finish date" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="11">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin>
+         <padding>
+            <Insets right="10.0" />
+         </padding></Label>
+      <Label text="Comment" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="15">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin>
+         <padding>
+            <Insets right="10.0" />
+         </padding></Label>
+      <DatePicker id="startDate" fx:id="startDate" GridPane.columnIndex="5" GridPane.rowIndex="7" />
+      <DatePicker id="finishDate" fx:id="finishDate" GridPane.columnIndex="5" GridPane.rowIndex="11" />
+      <TextArea id="comment" fx:id="comment" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="15" />
+      <Label styleClass="label-header" stylesheets="@DarkTheme.css" text="Create new task" textAlignment="CENTER" GridPane.columnIndex="5" />
+      <Button fx:id="addTaskButton" alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="26.0" prefWidth="87.0" stylesheets="@DarkTheme.css" text="Add" textAlignment="RIGHT" GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.rowIndex="17" />
+      <Label GridPane.columnIndex="2" GridPane.rowIndex="8" />
+      <Slider id="startTimeHour" fx:id="startHourSlider" max="23.0" GridPane.columnIndex="5" GridPane.rowIndex="8">
+         <GridPane.margin>
+            <Insets top="10.0" />
+         </GridPane.margin>
+         <padding>
+            <Insets top="10.0" />
+         </padding></Slider>
+      <Slider id="startTimeMinute" fx:id="startMinuteSlider" max="59.0" prefHeight="5.0" prefWidth="256.0" GridPane.columnIndex="5" GridPane.rowIndex="9" />
+      <Label id="startTimeView" fx:id="startTimeLabel" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="63.0" prefWidth="115.0" styleClass="label-clock" stylesheets="@DarkTheme.css" text="00:00" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.valignment="CENTER">
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin></Label>
+      <Label id="finishTimeView" fx:id="finishTimeLabel" contentDisplay="CENTER" lineSpacing="2.0" prefHeight="42.0" prefWidth="115.0" styleClass="label-clock" stylesheets="@DarkTheme.css" text="00:00" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="14" GridPane.valignment="CENTER" />
+      <Slider id="finishTimeMinute" fx:id="finishMinuteSlider" max="59.0" GridPane.columnIndex="5" GridPane.rowIndex="13" />
+      <Slider id="finishTimeHour" fx:id="finishHourSlider" max="23.0" GridPane.columnIndex="5" GridPane.rowIndex="12">
+         <GridPane.margin>
+            <Insets top="10.0" />
+         </GridPane.margin>
+         <padding>
+            <Insets top="10.0" />
+         </padding></Slider>
+      <Label fx:id="errorMessage" styleClass="label-bright" stylesheets="@DarkTheme.css" textFill="#e81c1c" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+      <Button fx:id="cancelButton" mnemonicParsing="false" text="Cancel" GridPane.columnIndex="5" GridPane.rowIndex="17" />
    </children>
+   <styleClass>
+      <String fx:value="background" />
+      <String fx:value="label" />
+   </styleClass>
 </GridPane>

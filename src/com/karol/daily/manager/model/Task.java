@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import javafx.beans.property.*;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 
 public class Task {
 
@@ -89,6 +91,7 @@ public class Task {
 	private final IntegerProperty finishHour;
 	private final IntegerProperty finishMinute;
 
+	@XmlJavaTypeAdapter(LocalDateAdapter.class)
 	public LocalDate getStartDate() {
 		return startDate.get();
 	}
@@ -103,6 +106,7 @@ public class Task {
 
 	private final ObjectProperty<LocalDate> startDate;
 
+	@XmlJavaTypeAdapter(LocalDateAdapter.class)
 	public LocalDate getFinishDate() {
 		return finishDate.get();
 	}
