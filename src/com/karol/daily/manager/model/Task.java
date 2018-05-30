@@ -1,6 +1,7 @@
 package com.karol.daily.manager.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javafx.beans.property.*;
 
@@ -54,6 +55,14 @@ public class Task {
 		return startMinute.get();
 	}
 
+	public String getStartHourFormatted() {
+	    return String.format("%02d", getStartHour()) + ":" + String.format("%02d", getStartMinute());
+    }
+
+    public String getFinishHourFormatted() {
+        return String.format("%02d", getFinishHour()) + ":" + String.format("%02d", getFinishMinute());
+    }
+
 	public IntegerProperty startMinuteProperty() {
 		return startMinute;
 	}
@@ -96,6 +105,20 @@ public class Task {
 		return startDate.get();
 	}
 
+	public String getStartDateTimeFormatted(){
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLL yy");
+		String formattedString = getStartDate().format(formatter);
+		formattedString += System.lineSeparator() + getStartHourFormatted();
+		return formattedString;
+	}
+
+	public String getFinishDateTimeFormatted(){
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLL yy");
+		String formattedString = getFinishDate().format(formatter);
+		formattedString += System.lineSeparator() + getFinishHourFormatted();
+		return formattedString;
+	}
+
 	public ObjectProperty<LocalDate> startDateProperty() {
 		return startDate;
 	}
@@ -132,14 +155,27 @@ public class Task {
 
 	private Integer status;
 
+    public String getPriority() {
+        return priority.get();
+    }
+
+    public StringProperty priorityProperty() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority.set(priority);
+    }
+
+    private StringProperty priority;
 
 	public Task() {
 		this(null, null, 0, 0, 0, 0,
-				LocalDate.of(2000,1,1), LocalDate.of(2000,1,1));
+				LocalDate.of(2000,1,1), LocalDate.of(2000,1,1), null);
 	}
-	
+
 	public Task(String name, String comment, Integer startHour, Integer startMinute, Integer finishHour, Integer finishMinute,
-				LocalDate startDate, LocalDate finishDate ) {
+				LocalDate startDate, LocalDate finishDate, String priority ) {
         this.name = new SimpleStringProperty(name);
         this.comment = new SimpleStringProperty(comment);
 		this.startHour = new SimpleIntegerProperty(startHour);
@@ -148,6 +184,7 @@ public class Task {
 		this.finishMinute = new SimpleIntegerProperty(finishMinute);
 		this.startDate = new SimpleObjectProperty<>(startDate);
 		this.finishDate = new SimpleObjectProperty<>(finishDate);
+		this.priority = new SimpleStringProperty(priority);
 		this.status = 0;
 	}
 }

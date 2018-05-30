@@ -9,6 +9,7 @@ import com.karol.daily.manager.model.*;
 
 import com.karol.daily.manager.view.NewTaskViewController;
 import com.karol.daily.manager.view.RootLayoutController;
+import com.karol.daily.manager.view.TasksListViewController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,6 +23,7 @@ import javafx.stage.Stage;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.Unmarshaller;
 
 public class MainApp extends Application {
@@ -29,6 +31,7 @@ public class MainApp extends Application {
     private Stage primaryStage;
     private BorderPane rootLayout;
     private GridPane newTaskView;
+    private GridPane tasksListView;
     private ObservableList<Task> taskData = FXCollections.observableArrayList();
     
     public MainApp() {}
@@ -36,6 +39,7 @@ public class MainApp extends Application {
     public ObservableList<Task> getTasksData() {
         return taskData;
     }
+
 
     public void addTaskToTaskData(Task newTask){
         taskData.add(newTask);
@@ -91,6 +95,24 @@ public class MainApp extends Application {
         }
     }
 
+    public void initTasksListView(){
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("view/TasksListView.fxml"));
+            tasksListView = (GridPane) loader.load();
+
+            Scene scene = new Scene(tasksListView, 900,  900);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+
+            TasksListViewController ctrl = loader.getController();
+            ctrl.setMainApp(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -106,6 +128,8 @@ public class MainApp extends Application {
             taskData.clear();
             taskData.addAll(wrapper.getTasks());
 
+        } catch (UnmarshalException e) {
+            taskData.clear();
         } catch (Exception e) { // catches ANY exception
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");

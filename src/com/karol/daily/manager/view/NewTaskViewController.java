@@ -6,6 +6,8 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -55,6 +57,9 @@ public class NewTaskViewController {
 	private Label errorMessage;
 
 	@FXML
+	private ComboBox<String> priority;
+
+	@FXML
 	private Button cancelButton;
 
 	private MainApp mainApp;
@@ -65,29 +70,41 @@ public class NewTaskViewController {
 	
 	@FXML
 	private void initialize() {
+		errorMessage.setWrapText(true);
+		ObservableList<String> options =
+				FXCollections.observableArrayList(
+						"Low",
+						"Medium",
+						"High"
+				);
+		priority.setItems(options);
+		priority.getSelectionModel().selectFirst();
+
 	}
 
 	private String validate(){
-		if (name.getText() == null || name.getText().trim().isEmpty())
+		String message = "";
+
+		if (name.getText().equals(""))
 		{
-			return "Name is empty";
+			message += "Name is empty" + System.getProperty("line.separator");
 		}
-		else if (startDate.getValue() == null)
+		if (startDate.getValue() == null)
 		{
-			return "Start date was not chosen";
+			message += "Start date was not chosen" + System.getProperty("line.separator");
 		}
-		else if (finishDate.getValue() == null)
+		if (finishDate.getValue() == null)
 		{
-			return "Finish date was not chosen";
+			message += "Finish date was not chosen" + System.getProperty("line.separator");
 		}
-		else if(startDate.getValue().isAfter(finishDate.getValue()) ||
+		else if(startDate.getValue() != null && (startDate.getValue().isAfter(finishDate.getValue()) ||
 				startDate.getValue().isEqual(finishDate.getValue()) && (newTask.getStartHour() > newTask.getFinishHour() ||
-						newTask.getStartHour() == newTask.getFinishHour() && newTask.getStartMinute() > newTask.getFinishMinute()) )
+						newTask.getStartHour() == newTask.getFinishHour() && newTask.getStartMinute() > newTask.getFinishMinute()) ))
 		{
-			return "Finish date must not happen before start date";
+			message += "Finish date must not happen before start date";
 		}
 
-		return "";
+		return message;
 	}
 	
     public void setMainApp(MainApp mainApp) {
@@ -106,7 +123,7 @@ public class NewTaskViewController {
 				, startMinuteSlider.valueProperty()));
 
 
-		StringExpression startTimeExpression = Bindings.format("%d:%d", newTask.startHourProperty(), newTask.startMinuteProperty());
+		StringExpression startTimeExpression = Bindings.format("%02d:%02d", newTask.startHourProperty(), newTask.startMinuteProperty());
 		startTimeLabel.textProperty().bind(startTimeExpression);
 
 
@@ -119,18 +136,19 @@ public class NewTaskViewController {
 						finishMinuteSlider.valueProperty().intValue()
 				, finishMinuteSlider.valueProperty()));
 
-		StringExpression finishTimeExpression = Bindings.format("%d:%d", newTask.finishHourProperty(), newTask.finishMinuteProperty());
+		StringExpression finishTimeExpression = Bindings.format("%02d:%02d", newTask.finishHourProperty(), newTask.finishMinuteProperty());
 		finishTimeLabel.textProperty().bind(finishTimeExpression);
 
 		newTask.startDateProperty().bind(startDate.valueProperty());
 		newTask.finishDateProperty().bind(finishDate.valueProperty());
+		newTask.priorityProperty().bind(priority.valueProperty());
 
 		addTaskButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				errorMessage.setText(validate());
 
-				if (validate()==""){
+				if (validate().equals("")){
 					newTask.setStatus(1);
 					mainApp.addTaskToTaskData(newTask);
 					mainApp.saveTaskDataToFile(new File("taskData.xml"));
