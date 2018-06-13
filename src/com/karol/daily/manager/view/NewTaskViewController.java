@@ -82,26 +82,26 @@ public class NewTaskViewController {
 
 	}
 
-	private String validate(){
-		String message = "";
+	private StringBuffer validate(){
+		StringBuffer message = new StringBuffer();
 
 		if (name.getText().equals(""))
 		{
-			message += "Name is empty" + System.getProperty("line.separator");
+			message.append("Name is empty" + System.getProperty("line.separator"));
 		}
 		if (startDate.getValue() == null)
 		{
-			message += "Start date was not chosen" + System.getProperty("line.separator");
+			message.append("Start date was not chosen" + System.getProperty("line.separator"));
 		}
 		if (finishDate.getValue() == null)
 		{
-			message += "Finish date was not chosen" + System.getProperty("line.separator");
+			message.append("Finish date was not chosen" + System.getProperty("line.separator"));
 		}
 		else if(startDate.getValue() != null && (startDate.getValue().isAfter(finishDate.getValue()) ||
 				startDate.getValue().isEqual(finishDate.getValue()) && (newTask.getStartHour() > newTask.getFinishHour() ||
 						newTask.getStartHour() == newTask.getFinishHour() && newTask.getStartMinute() > newTask.getFinishMinute()) ))
 		{
-			message += "Finish date must not happen before start date";
+			message.append("Finish date must not happen before start date");
 		}
 
 		return message;
@@ -146,12 +146,13 @@ public class NewTaskViewController {
 		addTaskButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				errorMessage.setText(validate());
+				errorMessage.setText(validate().toString());
 
-				if (validate().equals("")){
+				if (validate().toString().equals("")){
 					newTask.setStatus(1);
 					mainApp.addTaskToTaskData(newTask);
 					mainApp.saveTaskDataToFile(new File("taskData.xml"));
+
 					mainApp.initRootLayout("New task successfully added");
 				}
 

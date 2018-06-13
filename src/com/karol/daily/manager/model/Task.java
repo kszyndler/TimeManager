@@ -106,6 +106,8 @@ public class Task {
 	}
 
 	public String getStartDateTimeFormatted(){
+		if (getStartDate().equals(LocalDate.of(1970,1,1)))
+			return "";
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLL yy");
 		String formattedString = getStartDate().format(formatter);
 		formattedString += System.lineSeparator() + getStartHourFormatted();
@@ -113,6 +115,8 @@ public class Task {
 	}
 
 	public String getFinishDateTimeFormatted(){
+		if (getFinishDate().equals(LocalDate.of(1970,1,1)))
+			return "";
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLL yy");
 		String formattedString = getFinishDate().format(formatter);
 		formattedString += System.lineSeparator() + getFinishHourFormatted();
@@ -171,7 +175,7 @@ public class Task {
 
 	public Task() {
 		this(null, null, 0, 0, 0, 0,
-				LocalDate.of(2000,1,1), LocalDate.of(2000,1,1), null);
+				LocalDate.of(1970,1,1), LocalDate.of(1970,1,1), "");
 	}
 
 	public Task(String name, String comment, Integer startHour, Integer startMinute, Integer finishHour, Integer finishMinute,

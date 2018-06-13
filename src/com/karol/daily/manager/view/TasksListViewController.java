@@ -8,13 +8,17 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.TextAlignment;
 
+import java.io.File;
 import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.Optional;
 
 
 public class TasksListViewController {
@@ -44,6 +48,9 @@ public class TasksListViewController {
     private  TableColumn<Task, String> taskFutureTime;
 
     @FXML
+    private  TableColumn<Task, Image> clock;
+
+    @FXML
     private Label startedDetailsName;
 
     @FXML
@@ -70,6 +77,11 @@ public class TasksListViewController {
     private Label futureDetailsComment;
 
     @FXML
+    private Button deleteBtn;
+    @FXML
+    private Button delete2Btn;
+
+    @FXML
     private Button backButton;
 
     private MainApp mainApp;
@@ -78,19 +90,107 @@ public class TasksListViewController {
     private void initialize(){
         taskStartedName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         taskStartedPriority.setCellValueFactory(cellData -> cellData.getValue().priorityProperty());
+        clock.setCellFactory((p)->{
+            final ImageView imageview = new ImageView();
+            imageview.setFitHeight(15);
+            imageview.setFitWidth(15);
+
+            //Set up the Table
+            TableCell<Task, Image> cell = new TableCell<Task, Image>() {
+                public void updateItem(Image item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (!empty && item != null) {
+//                        System.out.println("tak");
+                        imageview.setImage(item);
+//                    } else {
+//                        System.out.println("blad");
+                    } else {
+                        imageview.setImage(null);
+                    }
+                }
+            };
+            // Attach the imageview to the cell
+            cell.setGraphic(imageview);
+            return cell;
+        });
+        clock.setCellValueFactory(cellData -> Bindings.createObjectBinding(()-> {
+                    Calendar rightNow = Calendar.getInstance();
+                    int current_hour = rightNow.get(Calendar.HOUR_OF_DAY);
+                    int current_minute = rightNow.get(Calendar.MINUTE);
+
+                    if(cellData.getValue().getStartDate().equals(LocalDate.now())){
+                        if(cellData.getValue().getStartHour() > current_hour){
+                            return null;
+                        }
+                        else if(cellData.getValue().getStartHour() == current_hour && cellData.getValue().getStartMinute() > current_minute){
+                            return null;
+                        }
+                    }
+                    if(cellData.getValue().getFinishDate().equals(LocalDate.now())){
+                        if(cellData.getValue().getFinishHour() < current_hour){
+                            return null;
+                        }
+                        else if(cellData.getValue().getFinishHour() == current_hour && cellData.getValue().getFinishMinute() < current_minute){
+                            return null;
+                        }
+                    }
+                    return new Image("time.png");
+                }
+        ));
         taskStartedTime.setCellValueFactory(cellData -> Bindings.createStringBinding(()->
             cellData.getValue().getFinishDate().equals(LocalDate.now()) ?
                     cellData.getValue().getFinishHourFormatted() :
                     cellData.getValue().getFinishDate().toString()
         , cellData.getValue().finishHourProperty(), cellData.getValue().finishMinuteProperty(), cellData.getValue().finishDateProperty()) );
 
-        taskFutureName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-        taskFuturePriority.setCellValueFactory(cellData -> cellData.getValue().priorityProperty());
+        taskFutureName.setCellValueFactory((cellData) -> cellData.getValue().nameProperty());
+        taskFuturePriority.setCellValueFactory((cellData) -> cellData.getValue().priorityProperty());
         taskFutureTime.setCellValueFactory(cellData -> Bindings.createStringBinding(()->
            cellData.getValue().getStartDate().equals(LocalDate.now()) ?
                    cellData.getValue().getStartHourFormatted() :
                    cellData.getValue().getStartDate().toString()
                 , cellData.getValue().startHourProperty(), cellData.getValue().startMinuteProperty(), cellData.getValue().startDateProperty()) );
+        deleteBtn.disableProperty().bind(Bindings.createBooleanBinding(()->
+                tasksListStarted.getSelectionModel().selectedItemProperty().getValue() == null
+        , tasksListStarted.getSelectionModel().selectedItemProperty()));
+        delete2Btn.disableProperty().bind(Bindings.createBooleanBinding(()->
+                tasksListFuture.getSelectionModel().selectedItemProperty().getValue() == null
+        , tasksListFuture.getSelectionModel().selectedItemProperty()));
+
+        deleteBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                Task toDelete = tasksListStarted.getSelectionModel().selectedItemProperty().getValue();
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Delete task");
+                StringBuffer message = new StringBuffer("Are you sure you want to delete task ");
+                message.append(toDelete.getName()).append("?");
+                alert.setHeaderText(message.toString());
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK){
+                    mainApp.removeTask(toDelete);
+                    mainApp.saveTaskDataToFile(new File("taskData.xml"));
+                }
+            }
+        });
+
+        delete2Btn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Delete task");
+                alert.setHeaderText("Are you sure you want to delete this task?");
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK){
+                    Task toDelete = tasksListFuture.getSelectionModel().selectedItemProperty().getValue();
+                    mainApp.removeTask(toDelete);
+                    mainApp.saveTaskDataToFile(new File("taskData.xml"));
+                }
+            }
+        });
 
         startedDetailsName.setWrapText(true);
         startedDetailsPriority.setWrapText(true);
@@ -101,6 +201,7 @@ public class TasksListViewController {
         futureDetailsPriority.setWrapText(true);
         futureDetailsComment.setWrapText(true);
         futureDetailsFinsish.setWrapText(true);
+        futureDetailsFinsish.setTextAlignment(TextAlignment.JUSTIFY);
         futureDetailsStart.setWrapText(true);
 
     }
@@ -125,9 +226,9 @@ public class TasksListViewController {
         tasksListStarted.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Task>() {
             @Override
             public void changed(ObservableValue observableValue, Task oldValue, Task newValue) {
-                if(tasksListStarted.getSelectionModel().getSelectedItem() != null)
+                if(newValue != null)
                 {
-                    bindStartedDetails(tasksListStarted.getSelectionModel().getSelectedItem());
+                    bindStartedDetails(newValue);
                 } else {
                     bindStartedDetails(new Task());
                 }
@@ -138,9 +239,9 @@ public class TasksListViewController {
         tasksListFuture.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Task>() {
             @Override
             public void changed(ObservableValue observableValue, Task oldValue, Task newValue) {
-                if(tasksListFuture.getSelectionModel().getSelectedItem() != null)
+                if(newValue != null)
                 {
-                    bindFuturedDetails(tasksListFuture.getSelectionModel().getSelectedItem());
+                    bindFuturedDetails(newValue);
                 } else {
                     bindFuturedDetails(new Task());
                 }
@@ -150,6 +251,7 @@ public class TasksListViewController {
 
 
     protected void bindStartedDetails(Task selectedTask){
+        System.out.println(selectedTask);
         startedDetailsName.textProperty().unbind();
         startedDetailsName.textProperty().bind(selectedTask.nameProperty());
         startedDetailsStart.textProperty().unbind();
@@ -165,6 +267,7 @@ public class TasksListViewController {
         startedDetailsPriority.textFillProperty().unbind();
         startedDetailsPriority.textFillProperty().bind(Bindings.createObjectBinding(()->(selectedTask.getPriority().equals("Low") ? Paint.valueOf("#008000") :
                 (selectedTask.getPriority().equals("Medium") ? Paint.valueOf("#ffd700") : Paint.valueOf("#e50000")))));
+
     }
 
     protected void bindFuturedDetails(Task selectedTask){

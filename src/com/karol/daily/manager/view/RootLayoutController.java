@@ -4,6 +4,7 @@ import com.karol.daily.manager.MainApp;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
@@ -30,7 +31,12 @@ public class RootLayoutController {
 
     public void setMainApp(MainApp mainApp, String message) {
         this.mainApp = mainApp;
-        information.setText(message);
+        if (!message.equals("")){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Task successfully added");
+            alert.setHeaderText("Task was added successfully. ");
+            alert.showAndWait();
+        }
         newTaskMenuButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {

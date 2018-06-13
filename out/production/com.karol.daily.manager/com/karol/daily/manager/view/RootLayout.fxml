@@ -23,7 +23,6 @@
             <Label styleClass="label-header" stylesheets="@DarkTheme.css" text="Daily Manager" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
             <Button fx:id="tasksListMenuButton" alignment="CENTER" mnemonicParsing="false" prefHeight="85.0" prefWidth="318.0" styleClass="buttonMenu" stylesheets="@DarkTheme.css" text="Tasks for today" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
             <Button fx:id="newTaskMenuButton" alignment="CENTER" mnemonicParsing="false" prefHeight="85.0" prefWidth="318.0" styleClass="buttonMenu" stylesheets="@DarkTheme.css" text="Add new task" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-            <Label fx:id="information" prefHeight="5.0" styleClass="text-field" stylesheets="@DarkTheme.css" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
          </children>
       </GridPane>
    </center>

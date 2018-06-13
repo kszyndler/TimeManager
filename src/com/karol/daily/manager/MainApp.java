@@ -3,6 +3,7 @@ package com.karol.daily.manager;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Iterator;
 import java.util.prefs.Preferences;
 
 import com.karol.daily.manager.model.*;
@@ -40,7 +41,6 @@ public class MainApp extends Application {
         return taskData;
     }
 
-
     public void addTaskToTaskData(Task newTask){
         taskData.add(newTask);
     }
@@ -59,7 +59,7 @@ public class MainApp extends Application {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/RootLayout.fxml"));
-            rootLayout = (BorderPane) loader.load();
+            BorderPane rootLayout = (BorderPane) loader.load();
 
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout, 400,  400);
@@ -82,7 +82,7 @@ public class MainApp extends Application {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/NewTaskView.fxml"));
-            newTaskView = (GridPane) loader.load();
+            GridPane newTaskView = (GridPane) loader.load();
 
             Scene scene = new Scene(newTaskView, 600,  800);
             primaryStage.setScene(scene);
@@ -93,13 +93,14 @@ public class MainApp extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     public void initTasksListView(){
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/TasksListView.fxml"));
-            tasksListView = (GridPane) loader.load();
+            GridPane tasksListView = (GridPane) loader.load();
 
             Scene scene = new Scene(tasksListView, 900,  900);
             primaryStage.setScene(scene);
@@ -127,16 +128,8 @@ public class MainApp extends Application {
 
             taskData.clear();
             taskData.addAll(wrapper.getTasks());
-
-        } catch (UnmarshalException e) {
+        } catch (Exception e) {
             taskData.clear();
-        } catch (Exception e) { // catches ANY exception
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Could not load data");
-            alert.setContentText("Could not load data from file:\n" + file.getPath());
-
-            alert.showAndWait();
         }
     }
 
@@ -161,6 +154,17 @@ public class MainApp extends Application {
             alert.setContentText("Could not save data to file:\n" + file.getPath());
 
             alert.showAndWait();
+        }
+    }
+
+    public void removeTask(Task toDelete) {
+        Iterator<Task> iter = getTasksData().iterator();
+        while (iter.hasNext()){
+            Task i = iter.next();
+            if (i.equals(toDelete)){
+                iter.remove();
+                return;
+            }
         }
     }
 }
