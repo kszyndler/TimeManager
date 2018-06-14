@@ -152,7 +152,6 @@ public class NewTaskViewController {
 					newTask.setStatus(1);
 					mainApp.addTaskToTaskData(newTask);
 					mainApp.saveTaskDataToFile(new File("taskData.xml"));
-
 					mainApp.initRootLayout("New task successfully added");
 				}
 

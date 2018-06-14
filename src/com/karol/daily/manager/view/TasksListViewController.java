@@ -5,6 +5,8 @@ import com.karol.daily.manager.model.Task;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -91,7 +93,7 @@ public class TasksListViewController {
         taskStartedName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         taskStartedPriority.setCellValueFactory(cellData -> cellData.getValue().priorityProperty());
         clock.setCellFactory((p)->{
-            final ImageView imageview = new ImageView();
+            ImageView imageview = new ImageView();
             imageview.setFitHeight(15);
             imageview.setFitWidth(15);
 
@@ -209,19 +211,26 @@ public class TasksListViewController {
     public void setMainApp(MainApp mainApp)
     {
         this.mainApp = mainApp;
-        tasksListStarted.setItems(mainApp.getTasksData().filtered((c)->
-            !c.getStartDate().isAfter(LocalDate.now()) && !c.getFinishDate().isBefore(LocalDate.now())
-        ));
-        tasksListFuture.setItems(mainApp.getTasksData().filtered((c)->
-                c.getStartDate().isAfter(LocalDate.now())
-        ));
+
+        FilteredList<Task> filteredList = mainApp.getTasksData().filtered((c)->
+                !c.getStartDate().isAfter(LocalDate.now()) && !c.getFinishDate().isBefore(LocalDate.now())
+        );
+        SortedList<Task> sortedList = new SortedList<>(filteredList);
+        tasksListStarted.setItems(sortedList);
+        sortedList.comparatorProperty().bind(tasksListStarted.comparatorProperty());
+
+        FilteredList<Task> filteredList2 = mainApp.getTasksData().filtered((c)->
+                c.getStartDate().isAfter(LocalDate.now()));
+        SortedList<Task> sortedList2 = new SortedList<>(filteredList2);
+        tasksListFuture.setItems(sortedList2);
+        sortedList2.comparatorProperty().bind(tasksListFuture.comparatorProperty());
+
         backButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 mainApp.initRootLayout();
             }
         });
-
 
         tasksListStarted.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Task>() {
             @Override
@@ -230,7 +239,7 @@ public class TasksListViewController {
                 {
                     bindStartedDetails(newValue);
                 } else {
-                    bindStartedDetails(new Task());
+                    bindStartedDetails(new Task()); //dla rozpoczecia programu
                 }
             }
         });
@@ -251,7 +260,7 @@ public class TasksListViewController {
 
 
     protected void bindStartedDetails(Task selectedTask){
-        System.out.println(selectedTask);
+        //System.out.println(selectedTask);
         startedDetailsName.textProperty().unbind();
         startedDetailsName.textProperty().bind(selectedTask.nameProperty());
         startedDetailsStart.textProperty().unbind();
